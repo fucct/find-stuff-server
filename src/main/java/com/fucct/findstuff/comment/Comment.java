@@ -39,5 +39,9 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Member member;
+
+    public void changeContent(@NotBlank String newContent) {
+        this.content = newContent;
+    }
 }
 
