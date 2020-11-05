@@ -19,8 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
+@Builder
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Getter
@@ -47,6 +47,15 @@ public class Member extends BaseEntity {
 
     @Enumerated(value = EnumType.STRING)
     private MemberType memberType;
+
+    public void changeInfo(@NotBlank String newEmail, @NotBlank String newName,
+        @NotBlank String newNickname,
+        @NotBlank String newPassword) {
+        this.email = newEmail;
+        this.name = newName;
+        this.nickname = newNickname;
+        this.password = newPassword;
+    }
 }
 
 
