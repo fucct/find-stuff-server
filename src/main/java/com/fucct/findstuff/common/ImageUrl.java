@@ -15,4 +15,8 @@ public class ImageUrl {
 
     @NotBlank
     private String url;
+
+    public static ImageUrl of(String url) {
+        return new ImageUrl(url);
+    }
 }

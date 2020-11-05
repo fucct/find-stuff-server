@@ -25,11 +25,10 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
+@Builder
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Getter
@@ -64,9 +63,10 @@ public class Article extends BaseEntity {
     @NotNull
     private List<Comment> comments = new ArrayList<>();
 
-    public void modifyArticle(String newTitle, String newContent) {
+    public void modifyArticle(String newTitle, String newContent, List<ImageUrl> images) {
         this.title = newTitle;
         this.content = newContent;
+        this.images = images;
     }
 
     public void addComment(Comment comment) {

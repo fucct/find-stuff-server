@@ -2,65 +2,119 @@ package com.fucct.findstuff.article;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.fucct.findstuff.comment.Comment;
 import com.fucct.findstuff.comment.CommentFixture;
+import com.fucct.findstuff.common.ImageUrl;
+import com.fucct.findstuff.member.domain.Member;
+import com.fucct.findstuff.member.fixture.MemberFixture;
 
+@DisplayName("Article 클래스")
 class ArticleTest {
 
-    @DisplayName("Create article")
-    @Test
-    void createArticle() {
-        assertThat(Article.builder().build()).isInstanceOf(Article.class);
+    private Article article;
+
+    @BeforeEach
+    void setUp() {
+        article = ArticleFixture.createWithoutId();
     }
 
-    @DisplayName("Modify title of article")
-    @Test
-    void changeTitle() {
-        Article article = ArticleFixture.createWithoutId();
-        assertThat(article).extracting(Article::getTitle)
-            .isEqualTo(ArticleFixture.TITLE);
-        assertThat(article).extracting(Article::getContent)
-            .isEqualTo(ArticleFixture.CONTENT);
+    @Nested
+    @DisplayName("Builder.build 메소드는")
+    class Describe_builder {
+        private final String givenTitle = ArticleFixture.TITLE;
+        private final String givenContent = ArticleFixture.CONTENT;
+        private final List<ImageUrl> urls = Lists.newArrayList(ArticleFixture.IMAGE_URL);
+        private final Member givenMember = MemberFixture.createWithId(1L);
 
-        article.modifyArticle(ArticleFixture.OTHER_TITLE, ArticleFixture.CONTENT);
-        assertThat(article).extracting(Article::getTitle)
-            .isEqualTo(ArticleFixture.OTHER_TITLE);
-        assertThat(article).extracting(Article::getContent)
-            .isEqualTo(ArticleFixture.CONTENT);
+        @Nested
+        @DisplayName("만약 제목, 내용, image url 목록, 사용자가 주어진다면")
+        class Context_with_contents {
+            @Test
+            @DisplayName("Article을 생성하여 리턴한다")
+            void it_returns_article() {
+                Article article = Article.builder()
+                    .title(givenTitle)
+                    .content(givenContent)
+                    .images(urls)
+                    .member(givenMember)
+                    .build();
+
+                assertThat(article).isInstanceOf(Article.class);
+            }
+        }
     }
 
-    @DisplayName("Modify content of article")
-    @Test
-    void changeContent() {
-        Article article = ArticleFixture.createWithoutId();
-        assertThat(article).extracting(Article::getTitle)
-            .isEqualTo(ArticleFixture.TITLE);
-        assertThat(article).extracting(Article::getContent)
-            .isEqualTo(ArticleFixture.CONTENT);
+    @Nested
+    @DisplayName("modifyArticle 메소드는")
+    class Describe_modify_article {
+        private final String givenNewTitle = ArticleFixture.OTHER_TITLE;
+        private final String givenNewContent = ArticleFixture.OTHER_CONTENT;
+        private final List<ImageUrl> newUrls = Lists.newArrayList(ArticleFixture.OTHER_IMAGE_URL);
+        private final Member givenMember = MemberFixture.createWithId(1L);
 
-        article.modifyArticle(ArticleFixture.TITLE, ArticleFixture.OTHER_CONTENT);
-        assertThat(article).extracting(Article::getTitle)
-            .isEqualTo(ArticleFixture.TITLE);
-        assertThat(article).extracting(Article::getContent)
-            .isEqualTo(ArticleFixture.OTHER_CONTENT);
+        @Nested
+        @DisplayName("만약 제목, 내용, image url 목록이 주어진다면")
+        class Context_with_contents {
+
+            @Test
+            @DisplayName("Article의 제목을 수정한다")
+            void it_changes_article_title() {
+                article.modifyArticle(givenNewTitle, article.getContent(), article.getImages());
+
+                assertThat(article)
+                    .extracting(Article::getTitle).isEqualTo(givenNewTitle);
+            }
+
+            @Test
+            @DisplayName("Article의 내용을 수정한다")
+            void it_changes_article_content() {
+                article.modifyArticle(article.getTitle(), givenNewContent, article.getImages());
+
+                assertThat(article)
+                    .extracting(Article::getContent).isEqualTo(givenNewContent);
+            }
+
+            @Test
+            @DisplayName("Article의 이미지 url을 수정한다")
+            void it_changes_article_image_urls() {
+                article.modifyArticle(article.getTitle(), article.getContent(), newUrls);
+
+                assertThat(article)
+                    .extracting(Article::getImages)
+                    .usingRecursiveComparison()
+                    .isEqualTo(newUrls);
+            }
+        }
     }
 
-    @DisplayName("Add comment to article")
-    @Test
-    void addComment() {
-        Article article = ArticleFixture.createWithoutId();
-        Comment comment = CommentFixture.createWithoutId();
+    @Nested
+    @DisplayName("addComment 메소드는")
+    class Describe_addComment {
+        private final Comment comment = CommentFixture.createWithoutId();
 
-        article.addComment(comment);
+        @Nested
+        @DisplayName("만약 Comment가 주어진다면")
+        class Context_with_comment {
 
-        assertThat(article).extracting(Article::getComments)
-            .usingRecursiveComparison()
-            .isEqualTo(Collections.singletonList(comment));
+            @Test
+            @DisplayName("Article에 Comment를 추가한다")
+            void it_returns_article() {
+                article.addComment(comment);
+
+                assertThat(article.getComments()).containsExactly(comment);
+            }
+        }
     }
+
 }
