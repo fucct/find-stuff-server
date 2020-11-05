@@ -68,4 +68,8 @@ public class Article extends BaseEntity {
         this.title = newTitle;
         this.content = newContent;
     }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 }
