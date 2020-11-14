@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -16,9 +17,8 @@ public class LoginController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping
-    public String login(@RequestParam String code) {
-        String accessToken = loginService.getAccessToken(code);
-        return "LOL"+accessToken;
+    public String login(@RequestParam String code) throws JsonProcessingException {
+        return loginService.getAccessToken(code);
     }
 
 }

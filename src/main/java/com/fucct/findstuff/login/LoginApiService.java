@@ -1,5 +1,7 @@
 package com.fucct.findstuff.login;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 public interface LoginApiService {
-    String getAccessToken(String code);
+    AccessToken getAccessToken(String code) throws JsonProcessingException;
 }
