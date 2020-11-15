@@ -1,14 +1,11 @@
 package com.fucct.findstuff.login;
 
-import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -22,27 +19,27 @@ import com.fucct.findstuff.config.YamlPropertySourceFactory;
 
 @Component
 @PropertySource(value = "classpath:/secret/secret.yml", factory = YamlPropertySourceFactory.class)
-public class GithubLoginApiService implements LoginApiService {
+public class KakaoLoginApiService implements LoginApiService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    @Value("${github.oauth_uri}")
+    @Value("${kakao.oauth_uri}")
     private String OAuthUri;
 
-    @Value("${github.client_id}")
+    @Value("${kakao.client_id}")
     private String clientId;
 
-    @Value("${github.client_secret}")
+    @Value("${kakao.client_secret}")
     private String clientSecret;
 
-    @Value("${github.api_uri}")
+    @Value("${kakao.api_uri}")
     private String apiUri;
 
     @Value("${server.user_info_uri}")
     private String userInfoUri;
 
-    public GithubLoginApiService(ObjectMapper objectMapper) {
+    public KakaoLoginApiService(ObjectMapper objectMapper) {
         this.restTemplate = new RestTemplateBuilder()
             .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
             .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
